@@ -1,13 +1,17 @@
 .Timer {
   text-align: center;
+  min-width: 300px;
+  margin: 20px;
+  padding: 20px;
 }
 
 .Timer-header {
-  background-color: #222;
   color: white;
 }
 
 .Timer-number {
-  font-size: large;
-  color: #000;
+  font-size: 3em;
+  font-family: "Courier New", Courier, monospace;
+  font-weight: bold;
+  color: white;
 }

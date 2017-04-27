@@ -5,6 +5,19 @@ import 'moment-duration-format';
 
 import './Timer.css';
 
+const colors = [
+  '#F2C57C',
+  '#DDAE7E',
+  '#7FB685',
+  '#426A5A',
+  '#EF6F6C',
+  '#846C44',
+  '#795F45',
+  '#3A533D',
+  '#759287',
+  '#6D3332',
+]
+
 class Timer extends Component {
   constructor(props) {
     super(props);
@@ -26,7 +39,7 @@ class Timer extends Component {
     Mousetrap.bind(`${props.index}`, () => this.state.active ?
       this.handleStopTimer() :
       this.handleStartTimer());
-    Mousetrap.bind(`0 ${props.index}`, this.handleResetTimer);
+    Mousetrap.bind(`0+${props.index}`, this.handleResetTimer);
   }
 
   handleStartTimer() {
@@ -61,7 +74,7 @@ class Timer extends Component {
 
   render() {
     return (
-      <div className="Timer">
+      <div className="Timer" style={{backgroundColor: colors[this.props.index % 10]}}>
         <div className="Timer-header">
           <h2>{`Timer #${this.props.index}`}</h2>
         </div>

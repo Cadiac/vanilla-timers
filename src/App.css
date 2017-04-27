@@ -14,9 +14,11 @@
 }
 
 .App-timers {
-  background-color: #FFF;
-  padding: 20px;
-  color: white;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
 }
 
 .App-intro {

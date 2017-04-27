@@ -30,6 +30,9 @@ class App extends Component {
       <div className="App">
         <div className="App-header">
           <h2>Simple timers</h2>
+          <p>
+            {`Use keypad numbers to control the timers, 0 + number to reset.`}
+          </p>
         </div>
         <div className="App-timers">
           {this.state.timers.map(timer => <Timer key={timer} index={timer} />)}
