@@ -1,0 +1,13 @@
+.Timer {
+  text-align: center;
+}
+
+.Timer-header {
+  background-color: #222;
+  color: white;
+}
+
+.Timer-number {
+  font-size: large;
+  color: #000;
+}

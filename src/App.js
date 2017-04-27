@@ -1,18 +1,44 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+import Mousetrap from 'mousetrap';
+import Timer from './Timer';
+
 import './App.css';
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+    // We use '0' for resets, start indexing from 1
+    this.state = {
+      timers: [
+        1,
+      ],
+    };
+
+    this.handleAddTimer = this.handleAddTimer.bind(this);
+
+    Mousetrap.bind('+', this.handleAddTimer);
+  }
+
+  handleAddTimer() {
+    this.setState({
+      timers: this.state.timers.concat(this.state.timers.length + 1)
+    })
+  }
+
   render() {
     return (
       <div className="App">
         <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h2>Welcome to React</h2>
+          <h2>Simple timers</h2>
         </div>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
+        <div className="App-timers">
+          {this.state.timers.map(timer => <Timer key={timer} index={timer} />)}
+        </div>
+        <div className="App-more">
+          <button className="App-button" onClick={this.handleAddTimer}>
+            Add timer
+          </button>
+        </div>
       </div>
     );
   }
