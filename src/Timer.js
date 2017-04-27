@@ -60,8 +60,14 @@ class Timer extends Component {
 
   handleStopTimer() {
     clearInterval(this.timer);
-    // Store elapsed time in previous
-    this.setState({ active: false, previous: this.state.elapsed });
+
+    // Since interval only runs every 50ms, we need to calculate the
+    // actual difference between start and end here for better precision
+    const exactDiff = moment.duration(moment().diff(this.state.startTime))
+      .add(this.state.previous);
+
+    // Store elapsed time in previous, and update elapsed to exact value
+    this.setState({ active: false, previous: exactDiff, elapsed: exactDiff });
   }
 
   handleResetTimer() {
