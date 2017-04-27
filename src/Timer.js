@@ -39,7 +39,7 @@ class Timer extends Component {
     Mousetrap.bind(`${props.index}`, () => this.state.active ?
       this.handleStopTimer() :
       this.handleStartTimer());
-    Mousetrap.bind(`0+${props.index}`, this.handleResetTimer);
+    Mousetrap.bind(`0 ${props.index}`, this.handleResetTimer);
   }
 
   handleStartTimer() {
