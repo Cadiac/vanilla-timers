@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
-// import Search from './Search';
 import axios from 'axios';
+
+import Timer from './Timer/Timer';
+import './SearchPage.css'
 
 const api = axios.create({
   baseURL: 'http://localhost:8080/api/v1',
   timeout: 10000,
 });
-
-import './SearchPage.css';
 
 class SearchPage extends Component {
   constructor(props) {
@@ -15,11 +15,23 @@ class SearchPage extends Component {
 
     this.state = {
       query: '',
-      results: []
+      results: [],
+      timers: [],
     };
 
     this.handleSearchRequest = this.handleSearchRequest.bind(this);
     this.handleSearchQueryChange = this.handleSearchQueryChange.bind(this);
+    this.handleAddTimer = this.handleAddTimer.bind(this);
+  }
+
+  handleAddTimer(name) {
+    this.setState({
+      timers: this.state.timers.concat({
+        name,
+        index: this.state.timers.length + 1
+      }),
+      results: [],
+    });
   }
 
   handleSearchRequest(event) {
@@ -37,25 +49,61 @@ class SearchPage extends Component {
 
   render() {
     return (
-      <div className="SearchPage">
-        <div className="SearchPage-header">
-          <h2>Search</h2>
-          <p>
-            {`Search for NPC by name.`}
-          </p>
-        </div>
-        <form onSubmit={this.handleSearchRequest}>
-          <label>
-            <input type="text" value={this.state.query} onChange={this.handleSearchQueryChange} placeholder="Name"/>
-          </label>
-          <input type="submit" value="Search" />
-        </form>
-        <div className="SearchPage-Searchs">
-          {this.state.results.map(result => (
-            <div>{`${result.name} - ${result.spawntimesecs} sec`}</div>
-          ))}
-        </div>
-      </div>
+      <section className="container grid-960">
+        <section className="columns">
+          <div className="column col-12">
+            <section className="empty">
+              <div className="empty-icon">
+                <i className="icon icon-time"></i>
+              </div>
+              <h4 className="empty-title">You have not added any timers</h4>
+              <p className="empty-subtitle">Start by searching for an NPC</p>
+              <div className="form-autocomplete">
+                <div className="empty-action input-group input-inline">
+                  <input
+                    className="form-input"
+                    type="text"
+                    value={this.state.query}
+                    onChange={this.handleSearchQueryChange}
+                    placeholder="Search NPC by name"
+                  />
+                  <button
+                    onClick={this.handleSearchRequest}
+                    className="btn btn-primary input-group-btn">
+                    Search
+                  </button>
+                </div>
+                {this.state.results.length > 0 &&
+                  <ul className="menu">
+                    {this.state.results.map(result => ([
+                      <li key={result.guid} className="menu-item">
+                        <div className="result" onClick={() => this.handleAddTimer(result.name)}>
+                          {`${result.name} - ${result.spawntimesecs} sec`}
+                        </div>
+                      </li>,
+                      <li className="divider"></li>
+                    ]))}
+                  </ul>
+                }
+              </div>
+            </section>
+          </div>
+        </section>
+        <section className="columns">
+          <div className="column col-12">
+            <div>
+              {this.state.timers.map(timer =>
+                <Timer key={timer.index} index={timer.index} name={timer.name} />
+              )}
+            </div>
+            <div>
+              <button onClick={() => this.handleAddTimer('Timer')}>
+                Add timer
+              </button>
+            </div>
+          </div>
+        </section>
+      </section>
     );
   }
 }

@@ -1,5 +1,9 @@
 body {
-  margin: 0;
-  padding: 0;
-  font-family: "Courier New", Courier;
+  font-family: 'VT323', monospace;
+}
+
+.bg-gray {
+  background: #f8f9fa;
+  color: #667189;
+  padding: 1rem;
 }

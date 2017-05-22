@@ -82,7 +82,7 @@ class Timer extends Component {
     return (
       <div className="Timer" style={{backgroundColor: colors[this.props.index % 10]}}>
         <div className="Timer-header">
-          <h2>{`Timer #${this.props.index}`}</h2>
+          <h2>{`${this.props.name} - ${this.props.index}`}</h2>
         </div>
         <p className="Timer-number">
           {this.state.elapsed.format('hh:mm:ss:SSS', { trim: false })}

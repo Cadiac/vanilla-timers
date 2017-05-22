@@ -1,0 +1,8 @@
+.result:hover {
+  color: #454d5d;
+  cursor: pointer;
+}
+
+.empty-icon i {
+  font-size: 3rem;
+}
