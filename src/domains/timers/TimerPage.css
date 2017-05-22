@@ -1,19 +1,19 @@
-.App {
+.TimerPage {
   text-align: center;
 }
 
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
+.TimerPage-logo {
+  animation: TimerPage-logo-spin infinite 20s linear;
   height: 80px;
 }
 
-.App-header {
+.TimerPage-header {
   background-color: #222;
   padding: 20px;
   color: white;
 }
 
-.App-timers {
+.TimerPage-timers {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -21,15 +21,15 @@
   flex-direction: row;
 }
 
-.App-intro {
+.TimerPage-intro {
   font-size: large;
 }
 
-.App-more {
+.TimerPage-more {
   padding: 20px;
 }
 
-@keyframes App-logo-spin {
+@keyframes TimerPage-logo-spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }

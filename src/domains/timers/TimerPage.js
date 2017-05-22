@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import Mousetrap from 'mousetrap';
 import Timer from './Timer';
 
-import './App.css';
+import './TimerPage.css';
 
-class App extends Component {
+class TimerPage extends Component {
   constructor(props) {
     super(props);
     // We use '0' for resets, start indexing from 1
@@ -27,18 +27,18 @@ class App extends Component {
 
   render() {
     return (
-      <div className="App">
-        <div className="App-header">
+      <div className="TimerPage">
+        <div className="TimerPage-header">
           <h2>Simple timers</h2>
           <p>
             {`Use keypad numbers to control the timers, 0 + number to reset.`}
           </p>
         </div>
-        <div className="App-timers">
+        <div className="TimerPage-timers">
           {this.state.timers.map(timer => <Timer key={timer} index={timer} />)}
         </div>
-        <div className="App-more">
-          <button className="App-button" onClick={this.handleAddTimer}>
+        <div className="TimerPage-more">
+          <button className="TimerPage-button" onClick={this.handleAddTimer}>
             Add timer
           </button>
         </div>
@@ -47,4 +47,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default TimerPage;
