@@ -80,11 +80,20 @@ class Timer extends Component {
     return (
       <div className="card">
         <div className="card-header">
-          <h4 className="card-title">{this.props.name}</h4>
-          <h6 className="card-subtitle">{`Keybind: ${this.props.index}`}</h6>
+          <div className="popover popover-right">
+            <h2 className="card-title">{this.props.name}</h2>
+            <div className="popover-container">
+              <div className="card">
+                <div className="card-body">
+                  Press <kbd>{`${this.props.index}`}</kbd> to start the timer.
+                  Combination of <kbd>{`0 + ${this.props.index}`}</kbd> resets the clock.
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
         <div className="card-body">
-          {this.state.elapsed.format('hh:mm:ss:SSS', { trim: false })}
+          <h2>{this.state.elapsed.format('hh:mm:ss:SSS', { trim: false })}</h2>
         </div>
         <div className="card-footer">
           {this.state.active ?
