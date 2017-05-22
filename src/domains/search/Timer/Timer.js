@@ -3,19 +3,6 @@ import Mousetrap from 'mousetrap';
 import moment from 'moment';
 import 'moment-duration-format';
 
-const colors = [
-  '#F2C57C',
-  '#DDAE7E',
-  '#7FB685',
-  '#426A5A',
-  '#EF6F6C',
-  '#846C44',
-  '#795F45',
-  '#3A533D',
-  '#759287',
-  '#6D3332',
-]
-
 class Timer extends Component {
   constructor(props) {
     super(props);

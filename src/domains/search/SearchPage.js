@@ -56,8 +56,12 @@ class SearchPage extends Component {
               <div className="empty-icon">
                 <i className="icon icon-time"></i>
               </div>
-              <h4 className="empty-title">You have not added any timers</h4>
-              <p className="empty-subtitle">Start by searching for an NPC</p>
+              {this.state.timers.length === 0 ? [
+                <h4 key="h4" className="empty-title">You have not added any timers</h4>,
+                <p key="p" className="empty-subtitle">Start by searching for an NPC</p>
+              ] : (
+                <h4 className="empty-title">Search for more NPCs</h4>
+              )}
               <div className="form-autocomplete">
                 <div className="empty-action input-group input-inline">
                   <input
@@ -75,8 +79,8 @@ class SearchPage extends Component {
                 </div>
                 {this.state.results.length > 0 &&
                   <ul className="menu">
-                    {this.state.results.map(result => ([
-                      <li key={result.guid} className="menu-item">
+                    {this.state.results.map((result, index) => ([
+                      <li key={index} className="menu-item">
                         <div className="btn btn-link" onClick={() => this.handleAddTimer(result.name)}>
                           {`${result.name} - ${result.spawntimesecs} sec`}
                         </div>
