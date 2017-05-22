@@ -77,7 +77,7 @@ class SearchPage extends Component {
                   <ul className="menu">
                     {this.state.results.map(result => ([
                       <li key={result.guid} className="menu-item">
-                        <div className="result" onClick={() => this.handleAddTimer(result.name)}>
+                        <div className="btn btn-link" onClick={() => this.handleAddTimer(result.name)}>
                           {`${result.name} - ${result.spawntimesecs} sec`}
                         </div>
                       </li>,
@@ -90,17 +90,15 @@ class SearchPage extends Component {
           </div>
         </section>
         <section className="columns">
-          <div className="column col-12">
-            <div>
-              {this.state.timers.map(timer =>
-                <Timer key={timer.index} index={timer.index} name={timer.name} />
-              )}
+          {this.state.timers.map(timer =>
+            <div className="column col-3 col-xs-12">
+              <Timer key={timer.index} index={timer.index} name={timer.name} />
             </div>
-            <div>
-              <button onClick={() => this.handleAddTimer('Timer')}>
-                Add timer
-              </button>
-            </div>
+          )}
+          <div>
+            <button onClick={() => this.handleAddTimer('Timer')}>
+              Add timer
+            </button>
           </div>
         </section>
       </section>

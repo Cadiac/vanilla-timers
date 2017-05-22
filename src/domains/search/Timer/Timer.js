@@ -3,8 +3,6 @@ import Mousetrap from 'mousetrap';
 import moment from 'moment';
 import 'moment-duration-format';
 
-import './Timer.css';
-
 const colors = [
   '#F2C57C',
   '#DDAE7E',
@@ -80,24 +78,27 @@ class Timer extends Component {
 
   render() {
     return (
-      <div className="Timer" style={{backgroundColor: colors[this.props.index % 10]}}>
-        <div className="Timer-header">
-          <h2>{`${this.props.name} - ${this.props.index}`}</h2>
+      <div className="card">
+        <div className="card-header">
+          <h4 className="card-title">{this.props.name}</h4>
+          <h6 className="card-subtitle">{`Keybind: ${this.props.index}`}</h6>
         </div>
-        <p className="Timer-number">
+        <div className="card-body">
           {this.state.elapsed.format('hh:mm:ss:SSS', { trim: false })}
-        </p>
-        {this.state.active ?
-          <button onClick={this.handleStopTimer}>
-            Stop
-          </button> :
-          <button onClick={this.handleStartTimer}>
-            Start
+        </div>
+        <div className="card-footer">
+          {this.state.active ?
+            <button className="btn btn-primary" onClick={this.handleStopTimer}>
+              Stop
+            </button> :
+            <button className="btn" onClick={this.handleStartTimer}>
+              Start
+            </button>
+          }
+          <button className="btn btn-link" onClick={this.handleResetTimer}>
+            Reset
           </button>
-        }
-        <button onClick={this.handleResetTimer}>
-          Reset
-        </button>
+        </div>
       </div>
     );
   }
