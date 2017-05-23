@@ -12,11 +12,13 @@ class Timer extends Component {
       startTime: null,
       previous: moment.duration(),
       elapsed: moment.duration(),
+      spawntime: moment.duration(5, 'minutes'),
     };
 
     this.timer = null;
 
-    this.handleStartTimer = this.handleStartTimer.bind(this);
+    this.handleStartAscendingTimer = this.handleStartAscendingTimer.bind(this);
+    this.handleStartDescendingTimer = this.handleStartDescendingTimer.bind(this);
     this.handleStopTimer = this.handleStopTimer.bind(this);
     this.handleResetTimer = this.handleResetTimer.bind(this);
 
@@ -27,7 +29,7 @@ class Timer extends Component {
     Mousetrap.bind(`0 ${props.index}`, this.handleResetTimer);
   }
 
-  handleStartTimer() {
+  handleStartAscendingTimer() {
     this.setState({ active: true, startTime: moment() });
 
     if (this.timer) {
@@ -39,6 +41,24 @@ class Timer extends Component {
         elapsed: moment.duration(moment().diff(this.state.startTime))
           // Add previous timer if we already have clocked some time
           .add(this.state.previous),
+      })
+    , 50);
+  }
+
+  handleStartDescendingTimer() {
+    this.setState({ active: true, startTime: moment() });
+
+    if (this.timer) {
+      clearInterval(this.timer);
+    }
+
+    this.timer = setInterval(() =>
+      this.setState({
+        elapsed: moment.duration()
+          .add(this.props.spawntime, 's')
+          .subtract(moment.duration(moment().diff(this.state.startTime))
+            .add(this.state.previous)
+          ),
       })
     , 50);
   }
@@ -68,7 +88,7 @@ class Timer extends Component {
       <div className="card">
         <div className="card-header">
           <div className="popover popover-right">
-            <h2 className="card-title">{this.props.name}</h2>
+            <h2 className="card-title">{`${this.props.name} - ${this.props.spawntime}`}</h2>
             <div className="popover-container">
               <div className="card">
                 <div className="card-body">
@@ -87,7 +107,7 @@ class Timer extends Component {
             <button className="btn btn-primary" onClick={this.handleStopTimer}>
               Stop
             </button> :
-            <button className="btn" onClick={this.handleStartTimer}>
+            <button className="btn" onClick={this.handleStartDescendingTimer}>
               Start
             </button>
           }
