@@ -25,7 +25,7 @@ class Timer extends Component {
     // Bind '{index}' to start/stop, '0 {index}' to reset
     Mousetrap.bind(`${props.index}`, () => this.state.active ?
       this.handleStopTimer() :
-      this.handleStartTimer());
+      this.handleStartDescendingTimer());
     Mousetrap.bind(`0 ${props.index}`, this.handleResetTimer);
   }
 
@@ -94,7 +94,7 @@ class Timer extends Component {
       <div className="card">
         <div className="card-header">
           <div className="popover popover-right">
-            <h4 className="card-title">{this.props.name}</h4>
+            <h4 className="card-title badge" data-badge={this.props.index}>{this.props.name}</h4>
             <h6 className="card-subtitle">{this.state.spawntime.format("h [hrs] m [min] s [s]")}</h6>
             <div className="popover-container">
               <div className="card">
