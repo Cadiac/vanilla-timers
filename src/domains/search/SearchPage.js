@@ -3,6 +3,8 @@ import axios from 'axios';
 import moment from 'moment';
 import { debounce } from 'lodash';
 
+import ReactGA from 'react-ga';
+
 import Timer from './Timer/Timer';
 import './SearchPage.css'
 
@@ -10,6 +12,9 @@ const api = axios.create({
   baseURL: process.env.REACT_APP_API_URL,
   timeout: 10000,
 });
+
+ReactGA.initialize('UA-98173348-2');
+ReactGA.pageview('/');
 
 class SearchPage extends Component {
   constructor(props) {
@@ -34,6 +39,11 @@ class SearchPage extends Component {
   }
 
   handleAddTimer(name, spawntime, mapname, minlevel, maxlevel) {
+    ReactGA.event({
+      category: 'Timer',
+      action: 'Added an timer',
+      label: name,
+    });
     this.setState({
       timers: this.state.timers.concat({
         name,
@@ -48,12 +58,23 @@ class SearchPage extends Component {
 
   searchRequest() {
     if (this.state.query.length > 0) {
+      ReactGA.event({
+        category: 'Search',
+        action: 'Searched for NPC',
+        label: this.state.query,
+      });
+
       this.setState({ loading: true });
 
       api.get('/search', { params: { name: this.state.query } })
         .then(response =>
           this.setState({ results: response.data, resultsVisible: true, loading: false })
         );
+    } else {
+      ReactGA.event({
+        category: 'Search',
+        action: 'Empty search',
+      });
     }
   }
 

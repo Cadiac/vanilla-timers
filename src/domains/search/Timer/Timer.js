@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Mousetrap from 'mousetrap';
+import ReactGA from 'react-ga';
 import moment from 'moment';
 import 'moment-duration-format';
 
@@ -13,7 +14,7 @@ class Timer extends Component {
       active: false,
       startTime: null,
       previous: moment.duration(),
-      elapsed: moment.duration(props.spawntime, 'seconds'),
+      remaining: moment.duration(props.spawntime, 'seconds'),
       spawntime: moment.duration(props.spawntime, 'seconds'),
       percentage: 100,
     };
@@ -25,13 +26,13 @@ class Timer extends Component {
     this.handleResetTimer = this.handleResetTimer.bind(this);
 
     // Bind '{index}' to reset, '0 {index}' to start/stop
-    Mousetrap.bind(`${props.index}`, this.handleResetTimer);
+    Mousetrap.bind(`${props.index}`, () => this.handleResetTimer());
     Mousetrap.bind(`0 ${props.index}`, () => this.state.active ?
       this.handleStopTimer() :
       this.handleStartTimer());
   }
 
-  handleStartTimer() {
+  handleStartTimer(event) {
     this.setState({ active: true, startTime: moment() });
 
     if (this.timer) {
@@ -42,18 +43,34 @@ class Timer extends Component {
       const exactDiff = moment.duration(moment().diff(this.state.startTime))
         .add(this.state.previous);
 
-      const elapsed = moment.duration()
+      const remaining = moment.duration()
         .add(this.props.spawntime, 's')
         .subtract(exactDiff);
 
-      const percentage = Math.max((elapsed.asSeconds() / this.state.spawntime.asSeconds()) * 100, 0);
+      const percentage = Math.max((remaining.asSeconds() / this.state.spawntime.asSeconds()) * 100, 0);
 
-      this.setState({ elapsed, percentage });
+      this.setState({ remaining, percentage });
     }
     , 50);
+
+    if (event) {
+      ReactGA.event({
+        category: 'Timer',
+        action: 'Started timer with mouse',
+        label: this.props.name,
+        value: Math.floor(this.state.remaining.asSeconds()),
+      });
+    } else {
+      ReactGA.event({
+        category: 'Timer',
+        action: 'Started timer with keyboard',
+        label: this.props.name,
+        value: Math.floor(this.state.remaining.asSeconds()),
+      });
+    }
   }
 
-  handleStopTimer() {
+  handleStopTimer(event) {
     clearInterval(this.timer);
 
     // Since interval only runs every 50ms, we need to calculate the
@@ -61,20 +78,52 @@ class Timer extends Component {
     const exactDiff = moment.duration(moment().diff(this.state.startTime))
       .add(this.state.previous);
 
-    const elapsed = moment.duration()
+    const remaining = moment.duration()
       .add(this.props.spawntime, 's')
       .subtract(exactDiff);
 
-    // Store elapsed time in previous, and update elapsed to exact value
-    this.setState({ active: false, previous: exactDiff, elapsed });
+    // Store remaining time in previous, and update remaining to exact value
+    this.setState({ active: false, previous: exactDiff, remaining });
+
+    if (event) {
+      ReactGA.event({
+        category: 'Timer',
+        action: 'Stopped timer with mouse',
+        label: this.props.name,
+        value: Math.floor(this.state.remaining.asSeconds()),
+      });
+    } else {
+      ReactGA.event({
+        category: 'Timer',
+        action: 'Stopped timer with keyboard',
+        label: this.props.name,
+        value: Math.floor(this.state.remaining.asSeconds()),
+      });
+    }
   }
 
-  handleResetTimer() {
+  handleResetTimer(event) {
     this.setState({
       startTime: moment(),
       previous: moment.duration(),
-      elapsed: moment.duration(this.state.spawntime),
+      remaining: moment.duration(this.state.spawntime),
     });
+
+    if (event) {
+      ReactGA.event({
+        category: 'Timer',
+        action: 'Reset timer with mouse',
+        label: this.props.name,
+        value: Math.floor(this.state.remaining.asSeconds()),
+      });
+    } else {
+      ReactGA.event({
+        category: 'Timer',
+        action: 'Reset timer with keyboard',
+        label: this.props.name,
+        value: Math.floor(this.state.remaining.asSeconds()),
+      });
+    }
   }
 
   render() {
@@ -90,7 +139,7 @@ class Timer extends Component {
         </div>
         <div className="card-body">
           <h2 className="timer-text">
-            {this.state.elapsed.format('hh:mm:ss', { trim: false, precision: 2 })}
+            {this.state.remaining.format('hh:mm:ss', { trim: false, precision: 2 })}
           </h2>
           <div className="bar bar-sm">
             <div className="bar-item"
