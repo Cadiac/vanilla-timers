@@ -32,12 +32,15 @@ class SearchPage extends Component {
     this.handleSearchFocus = this.handleSearchFocus.bind(this);
   }
 
-  handleAddTimer(name, spawntime) {
+  handleAddTimer(name, spawntime, mapname, minlevel, maxlevel) {
     this.setState({
       timers: this.state.timers.concat({
         name,
         spawntime,
-        index: this.state.timers.length + 1
+        index: this.state.timers.length + 1,
+        mapname,
+        minlevel,
+        maxlevel,
       }),
     });
   }
@@ -109,8 +112,22 @@ class SearchPage extends Component {
                   <ul className="menu">
                     {this.state.results.length > 0 ?
                       this.state.results.map((result, index) => ([
-                        <li key={index} className="menu-item">
-                          <div className="btn btn-link" onMouseDown={() => this.handleAddTimer(result.name, result.spawntimesecs)}>
+                        <li key={index} className="menu-item" onMouseDown={() =>
+                          this.handleAddTimer(
+                            result.name,
+                            result.spawntimesecs,
+                            result.mapname,
+                            result.minlevel,
+                            result.maxlevel
+                          )
+                        }>
+                          <div className="menu-badge">
+                            <label className="label label-primary mr-5">{`${result.mapname}`}</label>
+                            <label className={`label ${result.maxlevel >= 60 ? 'label-error' : 'label-warning'} ml-5`}>
+                              {`lvl ${result.minlevel}-${result.maxlevel}`}
+                            </label>
+                          </div>
+                          <div className="btn btn-link">
                             {`${result.name} - ${moment.duration(result.spawntimesecs, 's').format("h [hrs] m [min] s [s]")}`}
                           </div>
                         </li>,
@@ -136,14 +153,12 @@ class SearchPage extends Component {
                 index={timer.index}
                 name={timer.name}
                 spawntime={timer.spawntime}
+                mapname={timer.mapname}
+                minlevel={timer.minlevel}
+                maxlevel={timer.maxlevel}
               />
             </div>
           )}
-          <div className="column col-12">
-            <button className="btn" onClick={() => this.handleAddTimer('Timer')}>
-              Add timer
-            </button>
-          </div>
         </section>
       </section>
     );

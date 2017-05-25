@@ -22,11 +22,11 @@ class Timer extends Component {
     this.handleStopTimer = this.handleStopTimer.bind(this);
     this.handleResetTimer = this.handleResetTimer.bind(this);
 
-    // Bind '{index}' to start/stop, '0 {index}' to reset
-    Mousetrap.bind(`${props.index}`, () => this.state.active ?
+    // Bind '{index}' to reset, '0 {index}' to start/stop
+    Mousetrap.bind(`${props.index}`, this.handleResetTimer);
+    Mousetrap.bind(`0 ${props.index}`, () => this.state.active ?
       this.handleStopTimer() :
       this.handleStartDescendingTimer());
-    Mousetrap.bind(`0 ${props.index}`, this.handleResetTimer);
   }
 
   handleStartAscendingTimer() {
@@ -93,34 +93,38 @@ class Timer extends Component {
     return (
       <div className="card">
         <div className="card-header">
-          <div className="popover popover-right">
-            <h4 className="card-title badge" data-badge={this.props.index}>{this.props.name}</h4>
-            <h6 className="card-subtitle">{this.state.spawntime.format("h [hrs] m [min] s [s]")}</h6>
-            <div className="popover-container">
-              <div className="card">
-                <div className="card-body">
-                  Press <kbd>{`${this.props.index}`}</kbd> to start the timer.
-                  Combination of <kbd>{`0 + ${this.props.index}`}</kbd> resets the clock.
-                </div>
-              </div>
-            </div>
-          </div>
+          <h4 className="card-title">{this.props.name}</h4>
+          <h6 className="card-subtitle">
+            {`${this.props.mapname}, lvl ${this.props.minlevel} - ${this.props.maxlevel}`}
+            <br/>
+            {this.state.spawntime.format("h [hrs] m [min] s [s]")}
+          </h6>
         </div>
         <div className="card-body">
           <h2>{this.state.elapsed.format('hh:mm:ss', { trim: false, precision: 2 })}</h2>
         </div>
         <div className="card-footer">
-          {this.state.active ?
-            <button className="btn btn-primary" onClick={this.handleStopTimer}>
-              Stop
-            </button> :
-            <button className="btn" onClick={this.handleStartDescendingTimer}>
-              Start
+          <div className="popover popover-right">
+            <div className="popover-container ml-5">
+              <div className="card">
+                <div className="card-body">
+                  Press <kbd>{`${this.props.index}`}</kbd> to reset the timer.
+                  Combination of <kbd>{`0 + ${this.props.index}`}</kbd> starts or stops the clock.
+                </div>
+              </div>
+            </div>
+            {this.state.active ?
+              <button className="btn btn-primary" onClick={this.handleStopTimer}>
+                Stop
+              </button> :
+              <button className="btn" onClick={this.handleStartDescendingTimer}>
+                Start
+              </button>
+            }
+            <button className="btn btn-link badge" onClick={this.handleResetTimer} data-badge={this.props.index}>
+              Reset
             </button>
-          }
-          <button className="btn btn-link" onClick={this.handleResetTimer}>
-            Reset
-          </button>
+          </div>
         </div>
       </div>
     );
