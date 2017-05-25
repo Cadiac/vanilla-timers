@@ -11,8 +11,8 @@ class Timer extends Component {
       active: false,
       startTime: null,
       previous: moment.duration(),
-      elapsed: moment.duration(),
-      spawntime: moment.duration(5, 'minutes'),
+      elapsed: moment.duration(props.spawntime, 'seconds'),
+      spawntime: moment.duration(props.spawntime, 'seconds'),
     };
 
     this.timer = null;
@@ -52,14 +52,16 @@ class Timer extends Component {
       clearInterval(this.timer);
     }
 
-    this.timer = setInterval(() =>
-      this.setState({
-        elapsed: moment.duration()
-          .add(this.props.spawntime, 's')
-          .subtract(moment.duration(moment().diff(this.state.startTime))
-            .add(this.state.previous)
-          ),
-      })
+    this.timer = setInterval(() => {
+      const exactDiff = moment.duration(moment().diff(this.state.startTime))
+        .add(this.state.previous);
+
+      const elapsed = moment.duration()
+        .add(this.props.spawntime, 's')
+        .subtract(exactDiff);
+
+      this.setState({ elapsed });
+    }
     , 50);
   }
 
@@ -71,15 +73,19 @@ class Timer extends Component {
     const exactDiff = moment.duration(moment().diff(this.state.startTime))
       .add(this.state.previous);
 
+    const elapsed = moment.duration()
+      .add(this.props.spawntime, 's')
+      .subtract(exactDiff);
+
     // Store elapsed time in previous, and update elapsed to exact value
-    this.setState({ active: false, previous: exactDiff, elapsed: exactDiff });
+    this.setState({ active: false, previous: exactDiff, elapsed });
   }
 
   handleResetTimer() {
     this.setState({
       startTime: moment(),
       previous: moment.duration(),
-      elapsed: moment.duration(),
+      elapsed: moment.duration(this.state.spawntime),
     });
   }
 

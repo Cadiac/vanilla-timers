@@ -105,8 +105,8 @@ class SearchPage extends Component {
               />
             </div>
           )}
-          <div>
-            <button onClick={() => this.handleAddTimer('Timer')}>
+          <div className="column col-12">
+            <button className="btn" onClick={() => this.handleAddTimer('Timer')}>
               Add timer
             </button>
           </div>
