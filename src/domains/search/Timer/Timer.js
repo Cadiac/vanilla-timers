@@ -13,12 +13,12 @@ class Timer extends Component {
       previous: moment.duration(),
       elapsed: moment.duration(props.spawntime, 'seconds'),
       spawntime: moment.duration(props.spawntime, 'seconds'),
+      percentage: 100,
     };
 
     this.timer = null;
 
-    this.handleStartAscendingTimer = this.handleStartAscendingTimer.bind(this);
-    this.handleStartDescendingTimer = this.handleStartDescendingTimer.bind(this);
+    this.handleStartTimer = this.handleStartTimer.bind(this);
     this.handleStopTimer = this.handleStopTimer.bind(this);
     this.handleResetTimer = this.handleResetTimer.bind(this);
 
@@ -26,26 +26,10 @@ class Timer extends Component {
     Mousetrap.bind(`${props.index}`, this.handleResetTimer);
     Mousetrap.bind(`0 ${props.index}`, () => this.state.active ?
       this.handleStopTimer() :
-      this.handleStartDescendingTimer());
+      this.handleStartTimer());
   }
 
-  handleStartAscendingTimer() {
-    this.setState({ active: true, startTime: moment() });
-
-    if (this.timer) {
-      clearInterval(this.timer);
-    }
-
-    this.timer = setInterval(() =>
-      this.setState({
-        elapsed: moment.duration(moment().diff(this.state.startTime))
-          // Add previous timer if we already have clocked some time
-          .add(this.state.previous),
-      })
-    , 50);
-  }
-
-  handleStartDescendingTimer() {
+  handleStartTimer() {
     this.setState({ active: true, startTime: moment() });
 
     if (this.timer) {
@@ -60,7 +44,9 @@ class Timer extends Component {
         .add(this.props.spawntime, 's')
         .subtract(exactDiff);
 
-      this.setState({ elapsed });
+      const percentage = Math.max((elapsed.asSeconds() / this.state.spawntime.asSeconds()) * 100, 0);
+
+      this.setState({ elapsed, percentage });
     }
     , 50);
   }
@@ -101,7 +87,17 @@ class Timer extends Component {
           </h6>
         </div>
         <div className="card-body">
-          <h2>{this.state.elapsed.format('hh:mm:ss', { trim: false, precision: 2 })}</h2>
+          <h2>
+            {this.state.elapsed.format('hh:mm:ss', { trim: false, precision: 2 })}
+          </h2>
+          <div className="bar bar-sm">
+            <div className="bar-item"
+              role="progressbar"
+              style={{width: `${this.state.percentage}%`}}
+              aria-valuenow={`${this.state.percentage}`}
+              aria-valuemin="0"
+              aria-valuemax="100"></div>
+          </div>
         </div>
         <div className="card-footer">
           <div className="popover popover-right">
@@ -117,7 +113,7 @@ class Timer extends Component {
               <button className="btn btn-primary" onClick={this.handleStopTimer}>
                 Stop
               </button> :
-              <button className="btn" onClick={this.handleStartDescendingTimer}>
+              <button className="btn" onClick={this.handleStartTimer}>
                 Start
               </button>
             }
