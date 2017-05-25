@@ -172,7 +172,7 @@ class SearchPage extends Component {
         </section>
         <section className="columns">
           {this.state.timers.map(timer =>
-            <div key={timer.index} className="column col-4 col-md-6 col-xs-12">
+            <div key={timer.index} className="column">
               <Timer
                 index={timer.index}
                 name={timer.name}
