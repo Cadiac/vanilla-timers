@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import moment from 'moment';
+import { debounce } from 'lodash';
 
 import Timer from './Timer/Timer';
 import './SearchPage.css'
@@ -18,11 +19,17 @@ class SearchPage extends Component {
       query: '',
       results: [],
       timers: [],
+      resultsVisible: false,
     };
+
+    this.searchRequest = debounce(this.searchRequest.bind(this), 300);
 
     this.handleSearchRequest = this.handleSearchRequest.bind(this);
     this.handleSearchQueryChange = this.handleSearchQueryChange.bind(this);
     this.handleAddTimer = this.handleAddTimer.bind(this);
+
+    this.handleSearchBlur = this.handleSearchBlur.bind(this);
+    this.handleSearchFocus = this.handleSearchFocus.bind(this);
   }
 
   handleAddTimer(name, spawntime) {
@@ -32,21 +39,38 @@ class SearchPage extends Component {
         spawntime,
         index: this.state.timers.length + 1
       }),
-      results: [],
     });
+  }
+
+  searchRequest() {
+    if (this.state.query.length > 0) {
+      api.get('/search', { params: { name: this.state.query } })
+        .then(response =>
+          this.setState({ results: response.data, resultsVisible: true })
+        );
+    }
   }
 
   handleSearchRequest(event) {
     event.preventDefault();
 
-    api.get('/search', { params: { name: this.state.query } })
-      .then(response =>
-        this.setState({ results: response.data })
-      );
+    this.searchRequest();
   }
 
   handleSearchQueryChange(event) {
     this.setState({ query: event.target.value });
+
+    this.searchRequest();
+  }
+
+  handleSearchBlur(event) {
+    this.setState({ resultsVisible: false });
+  }
+
+  handleSearchFocus(event) {
+    if (this.state.query.length > 0) {
+      this.setState({ resultsVisible: true });
+    }
   }
 
   render() {
@@ -64,7 +88,9 @@ class SearchPage extends Component {
               ] : (
                 <h4 className="empty-title">Search for more NPCs</h4>
               )}
-              <div className="form-autocomplete">
+              <div className="form-autocomplete"
+                onFocus={this.handleSearchFocus}
+                onBlur={this.handleSearchBlur}>
                 <div className="empty-action input-group input-inline">
                   <input
                     className="form-input"
@@ -79,16 +105,24 @@ class SearchPage extends Component {
                     Search
                   </button>
                 </div>
-                {this.state.results.length > 0 &&
+                {this.state.resultsVisible &&
                   <ul className="menu">
-                    {this.state.results.map((result, index) => ([
-                      <li key={index} className="menu-item">
-                        <div className="btn btn-link" onClick={() => this.handleAddTimer(result.name, result.spawntimesecs)}>
-                          {`${result.name} - ${moment.duration(result.spawntimesecs, 's').format("h [hrs] m [min] s [s]")}`}
-                        </div>
-                      </li>,
-                      <li className="divider"></li>
-                    ]))}
+                    {this.state.results.length > 0 ?
+                      this.state.results.map((result, index) => ([
+                        <li key={index} className="menu-item">
+                          <div className="btn btn-link" onMouseDown={() => this.handleAddTimer(result.name, result.spawntimesecs)}>
+                            {`${result.name} - ${moment.duration(result.spawntimesecs, 's').format("h [hrs] m [min] s [s]")}`}
+                          </div>
+                        </li>,
+                        <li className="divider"></li>
+                      ])) : (
+                        <li key='noresults' className="menu-item">
+                          <div className="btn btn-link">
+                            No results :(
+                          </div>
+                        </li>
+                      )
+                    }
                   </ul>
                 }
               </div>
@@ -97,9 +131,8 @@ class SearchPage extends Component {
         </section>
         <section className="columns">
           {this.state.timers.map(timer =>
-            <div className="column col-xl-3 col-lg-4 col-md-6 col-xs-12">
+            <div key={timer.index} className="column col-xl-3 col-lg-4 col-md-6 col-xs-12">
               <Timer
-                key={timer.index}
                 index={timer.index}
                 name={timer.name}
                 spawntime={timer.spawntime}
