@@ -94,7 +94,8 @@ class Timer extends Component {
       <div className="card">
         <div className="card-header">
           <div className="popover popover-right">
-            <h2 className="card-title">{`${this.props.name} - ${this.props.spawntime}`}</h2>
+            <h4 className="card-title">{this.props.name}</h4>
+            <h6 className="card-subtitle">{this.state.spawntime.format("h [hrs] m [min] s [s]")}</h6>
             <div className="popover-container">
               <div className="card">
                 <div className="card-body">
@@ -106,7 +107,7 @@ class Timer extends Component {
           </div>
         </div>
         <div className="card-body">
-          <h2>{this.state.elapsed.format('hh:mm:ss:SSS', { trim: false })}</h2>
+          <h2>{this.state.elapsed.format('hh:mm:ss', { trim: false, precision: 2 })}</h2>
         </div>
         <div className="card-footer">
           {this.state.active ?

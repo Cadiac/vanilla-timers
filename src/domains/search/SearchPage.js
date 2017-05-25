@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import moment from 'moment';
 
 import Timer from './Timer/Timer';
 import './SearchPage.css'
@@ -83,7 +84,7 @@ class SearchPage extends Component {
                     {this.state.results.map((result, index) => ([
                       <li key={index} className="menu-item">
                         <div className="btn btn-link" onClick={() => this.handleAddTimer(result.name, result.spawntimesecs)}>
-                          {`${result.name} - ${result.spawntimesecs} sec`}
+                          {`${result.name} - ${moment.duration(result.spawntimesecs, 's').format("h [hrs] m [min] s [s]")}`}
                         </div>
                       </li>,
                       <li className="divider"></li>
