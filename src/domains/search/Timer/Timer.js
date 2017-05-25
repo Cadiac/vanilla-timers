@@ -3,6 +3,8 @@ import Mousetrap from 'mousetrap';
 import moment from 'moment';
 import 'moment-duration-format';
 
+import './Timer.css';
+
 class Timer extends Component {
   constructor(props) {
     super(props);
@@ -87,7 +89,7 @@ class Timer extends Component {
           </h6>
         </div>
         <div className="card-body">
-          <h2>
+          <h2 className="timer-text">
             {this.state.elapsed.format('hh:mm:ss', { trim: false, precision: 2 })}
           </h2>
           <div className="bar bar-sm">
