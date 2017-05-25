@@ -7,7 +7,7 @@ import Timer from './Timer/Timer';
 import './SearchPage.css'
 
 const api = axios.create({
-  baseURL: 'http://localhost:8080/api/v1',
+  baseURL: process.env.REACT_APP_API_URL,
   timeout: 10000,
 });
 
@@ -20,6 +20,7 @@ class SearchPage extends Component {
       results: [],
       timers: [],
       resultsVisible: false,
+      loading: false,
     };
 
     this.searchRequest = debounce(this.searchRequest.bind(this), 300);
@@ -47,9 +48,11 @@ class SearchPage extends Component {
 
   searchRequest() {
     if (this.state.query.length > 0) {
+      this.setState({ loading: true });
+
       api.get('/search', { params: { name: this.state.query } })
         .then(response =>
-          this.setState({ results: response.data, resultsVisible: true })
+          this.setState({ results: response.data, resultsVisible: true, loading: false })
         );
     }
   }
@@ -104,7 +107,7 @@ class SearchPage extends Component {
                   />
                   <button
                     onClick={this.handleSearchRequest}
-                    className="btn btn-primary input-group-btn">
+                    className={`btn btn-primary input-group-btn ${this.state.loading ? 'loading' : ''}`}>
                     Search
                   </button>
                 </div>
